@@ -9,10 +9,10 @@
 
 Методы API:
 
-+ [phone.getInfo](#phone-getinfo)
-+ [phone.search](#phone-search)
-+ [phone.getReviews](#phone-getreviews)
-+ [phone.addReview](#phone-addreview)
++ [phone.getInfo](#phonegetinfo)
++ [phone.search](#phonesearch)
++ [phone.getReviews](#phonegetreviews)
++ [phone.addReview](#phoneaddreview)
 
 [Ошибки при вызове методов API](#ошибки-при-вызове-методов-api)
 
