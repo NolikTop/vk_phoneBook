@@ -13,6 +13,7 @@
 + [phone.search](#phonesearch)
 + [phone.getReviews](#phonegetreviews)
 + [phone.addReview](#phoneaddreview)
++ [phone.rateReview](#phoneratereview)
 
 [Ошибки при вызове методов API](#ошибки-при-вызове-методов-api)
 
