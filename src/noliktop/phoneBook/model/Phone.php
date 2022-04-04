@@ -5,10 +5,10 @@ namespace noliktop\phoneBook\model;
 use mysqli_stmt;
 use noliktop\phoneBook\db\Db;
 use noliktop\phoneBook\exception\AppException;
+use noliktop\phoneBook\exception\DbException;
 use noliktop\phoneBook\exception\ErrorCodes;
-use noliktop\phoneBook\exception\HTTPCodes;
 
-class Phone extends Model {
+class Phone extends InsertableModel {
 
 	public int $id;
 	public string $phone;
@@ -42,6 +42,7 @@ class Phone extends Model {
 	 * @param string $prefix
 	 * @return array
 	 * @throws ModelException
+	 * @throws DbException
 	 * @throws AppException
 	 */
 	public static function findByPrefix(string $prefix): array {
@@ -51,14 +52,22 @@ class Phone extends Model {
 		$queryText = <<<QUERY
 select concat('+', p.phone) as phone, count(r.review) as reviews_count from phones p
 left join reviews r on p.id = r.phone_id
-where phone like '$prepared%'
+where phone like ?
 group by p.phone
 order by reviews_count desc
 QUERY;
-		$q = $db->query($queryText);
-		if (!$q) {
-			throw new ModelException("Db error", HTTPCodes::INTERNAL_SERVER_ERROR);
+		$p = $db->prepare($queryText);
+		if (!$p) {
+			throw new DbException($db->error);
 		}
+
+		$prepared .= "%"; // для поиска
+		$p->bind_param("s", $prepared);
+		if (!$p->execute()) {
+			throw new DbException($db->error);
+		}
+
+		$q = $p->get_result();
 
 		$t = $q->fetch_all(MYSQLI_ASSOC);
 		foreach ($t as &$phone) { // mysql moment
@@ -66,13 +75,6 @@ QUERY;
 		}
 
 		return $t;
-	}
-
-	public static function fromRow(array $row): self {
-		$phone = new Phone();
-		$phone->fillFromRow($row);
-
-		return $phone;
 	}
 
 	public function fillFromRow(array $row): void {
@@ -95,15 +97,6 @@ QUERY;
 		$this->id = $db->insert_id;
 	}
 
-	protected function prepareUpdate(): mysqli_stmt {
-		$db = Db::get();
-
-		$p = $db->prepare("update phones set phone = ? where id = ?");
-		$p->bind_param("si", $this->phone, $this->id);
-
-		return $p;
-	}
-
 	/**
 	 * @throws ModelException
 	 */
@@ -118,8 +111,8 @@ QUERY;
 	}
 
 	/**
-	 * @throws ModelException
 	 * @throws ModelNotFoundException
+	 * @throws DbException
 	 */
 	public function loadByPhone(): void {
 		$db = Db::get();
@@ -132,7 +125,7 @@ QUERY;
 		$p->bind_param("s", $this->phone);
 
 		if (!$p->execute()) {
-			throw new ModelException("Db error: $db->error", HTTPCodes::INTERNAL_SERVER_ERROR);
+			throw new DbException($db->error);
 		}
 
 		$q = $p->get_result();

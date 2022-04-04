@@ -5,9 +5,8 @@ namespace noliktop\phoneBook\model;
 use mysqli_stmt;
 use noliktop\phoneBook\db\Db;
 use noliktop\phoneBook\exception\DbException;
-use noliktop\phoneBook\exception\HTTPCodes;
 
-class Review extends Model {
+class Review extends InsertableModel {
 
 	public int $id;
 	public int $phoneId;
@@ -16,19 +15,25 @@ class Review extends Model {
 	public int $createdAt;
 
 	/**
-	 * @throws ModelException
+	 * @throws DbException
 	 */
 	public static function getAllForPhone(Phone $phone, int $count, int $offset): array {
 		$db = Db::get();
 
 		$queryText = <<<QUERY
-select * from reviews where phone_id = $phone->id 
+select * from reviews where phone_id = ? 
 QUERY;
-		$q = $db->query($queryText);
-		if (!$q) {
-			throw new ModelException("Db error: $db->error", HTTPCodes::INTERNAL_SERVER_ERROR);
+		$p = $db->prepare($queryText);
+		if (!$p) {
+			throw new DbException($db->error);
 		}
 
+		$p->bind_param('i', $phone->phone);
+		if (!$p->execute()) {
+			throw new DbException($db->error);
+		}
+
+		$q = $p->get_result();
 		$allCount = $q->num_rows;
 
 		$queryText = <<<QUERY
@@ -40,13 +45,22 @@ select r.id,
 from reviews r
 left join reviews_marks rm on r.id = rm.review_id
 left join users u on r.user_id = u.id
-where phone_id = $phone->id
+where phone_id = ?
 group by r.id, u.name
 order by rating desc
-limit $offset,$count
+limit ?,?
 QUERY;
-		$q = $db->query($queryText);
+		$p = $db->prepare($queryText);
+		if (!$p) {
+			throw new DbException($db->error);
+		}
 
+		$p->bind_param("iii", $phone->id, $offset, $count);
+		if (!$p->execute()) {
+			throw new DbException($db->error);
+		}
+
+		$q = $p->get_result();
 		$t = $q->fetch_all(MYSQLI_ASSOC);
 		foreach ($t as &$review) { // mysql moment =(
 			$review["id"] = (int)$review["id"];
@@ -58,17 +72,6 @@ QUERY;
 			"all_count" => $allCount,
 			"reviews" => $t
 		];
-	}
-
-	public static function fromRow(array $row): self {
-		$review = new Review();
-		$review->id = (int)$row["id"];
-		$review->phoneId = (int)$row["phone_id"];
-		$review->userId = $row["user_id"];
-		$review->review = $row["review"];
-		$review->createdAt = (int)$row["created_at"];
-
-		return $review;
 	}
 
 	public static function fromId(int $id): self {
@@ -92,15 +95,6 @@ QUERY;
 
 		$this->id = $db->insert_id;
 		$this->createdAt = time(); // ибо зачем в бд лишний раз идти
-	}
-
-	protected function prepareUpdate(): mysqli_stmt {
-		$db = Db::get();
-
-		$p = $db->prepare("update reviews set phone_id = ?, user_id = ?, review = ? where id = ?");
-		$p->bind_param("iisi", $this->phoneId, $this->userId, $this->review, $this->id);
-
-		return $p;
 	}
 
 	/**
