@@ -18,3 +18,5 @@ VALUES (1, 1, 1),
        (2, 1, -1),
        (2, 2, 1),
        (2, 3, -1);
+
+insert into tokens (token, user_id) values ('abcdef', 1);
