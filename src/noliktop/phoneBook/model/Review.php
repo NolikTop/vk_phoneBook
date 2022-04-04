@@ -28,7 +28,7 @@ QUERY;
 			throw new DbException($db->error);
 		}
 
-		$p->bind_param('i', $phone->phone);
+		$p->bind_param('i', $phone->id);
 		if (!$p->execute()) {
 			throw new DbException($db->error);
 		}
