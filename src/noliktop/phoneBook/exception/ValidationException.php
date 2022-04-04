@@ -14,7 +14,7 @@ class ValidationException extends AppException {
 
 	protected string $parameter;
 
-	public function __construct(string $parameter, $message = "", int $httpCode = HTTPCodes::BAD_REQUEST, $code = 0, Throwable $previous = null) {
+	public function __construct(string $parameter, $message = "This parameter is required", int $httpCode = HTTPCodes::BAD_REQUEST, $code = 0, Throwable $previous = null) {
 		parent::__construct($message, $httpCode, $code, $previous);
 
 		$this->parameter = $parameter;
