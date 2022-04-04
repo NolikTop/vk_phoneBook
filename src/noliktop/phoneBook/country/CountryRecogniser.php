@@ -9,11 +9,11 @@ class CountryRecogniser {
 	protected static array $countries = [];
 
 	protected static function init() {
-		self::reg("7", "RU");
-		self::reg("1", "US");
-		self::reg("86", "CH");
-		self::reg("52", "MX");
-		self::reg("1905", "MX");
+		self::reg("7", "Россия");
+		self::reg("1", "США");
+		self::reg("86", "Китай");
+		self::reg("52", "Мексика");
+		self::reg("1905", "Мексика");
 
 		self::sort();
 	}
