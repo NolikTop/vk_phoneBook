@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace noliktop\phoneBook\controller;
 
 
+use noliktop\phoneBook\cache\UseCache;
+use noliktop\phoneBook\country\CountryException;
 use noliktop\phoneBook\country\CountryRecogniser;
 use noliktop\phoneBook\exception\AppException;
 use noliktop\phoneBook\exception\AuthException;
@@ -20,6 +22,7 @@ use noliktop\phoneBook\model\Token;
 use noliktop\phoneBook\response\IResponse;
 
 class PhoneController extends Controller {
+	use UseCache;
 
 	public function getName(): string {
 		return 'phone';
@@ -27,6 +30,7 @@ class PhoneController extends Controller {
 
 	/**
 	 * @throws ValidationException
+	 * @throws CountryException
 	 */
 	public function getCountry(array $args): IResponse {
 		$phone = $args['phone'] ?? '';
@@ -53,7 +57,9 @@ class PhoneController extends Controller {
 			throw new ValidationException('phone');
 		}
 
-		$allPhones = Phone::findByPrefix($phone);
+		$time = 600; // 10 минут
+		$allPhones = $this->remember("search.$phone", $time, fn()=>Phone::findByPrefix($phone));
+
 		return $this->response($allPhones);
 	}
 
@@ -61,8 +67,8 @@ class PhoneController extends Controller {
 
 	/**
 	 * @throws ValidationException
-	 * @throws ModelException
 	 * @throws ModelNotFoundException
+	 * @throws DbException
 	 */
 	public function getReviews(array $args): IResponse {
 		$phone = $args['phone'] ?? '';
@@ -84,11 +90,19 @@ class PhoneController extends Controller {
 			throw new ValidationException('offset');
 		}
 
-		$phone = Phone::fromNumber($phone);
-		$phone->loadByPhone();
+		$fn = function()use($phone, $count, $offset){
+			$phone = Phone::fromNumber($phone);
+			$phone->loadByPhone();
 
-		$reviews = Review::getAllForPhone($phone, $count, $offset);
-		return $this->response($reviews);
+			return Review::getAllForPhone($phone, $count, $offset);
+		};
+
+		// будем кешировать только 1 страницу, потому что только ее в большинстве случаев люди будут видеть
+		$condition = $offset > 0;
+		$time = 600; // 10 минут
+		$response = $this->rememberIf($condition, "reviews.$phone", $time, $fn);
+
+		return $this->response($response);
 	}
 
 	/**
