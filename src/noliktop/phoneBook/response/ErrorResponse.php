@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace noliktop\phoneBook\response;
 
 
-use noliktop\phoneBook\exception\AppException;
 use noliktop\phoneBook\exception\HTTPCodes;
 use Throwable;
 
@@ -25,17 +24,20 @@ class ErrorResponse implements IResponse {
 	public function getData(): array {
 		$e = $this->exception;
 
+		$t = [
+			'code' => $e->getCode(),
+			'message' => $e->getMessage(),
+		];
+
+		$t = array_merge($t, $this->getAdditionalData());
+
 		return [
-			'error' => [
-				'code' => $e->getCode(),
-				'message' => $e->getMessage(),
-				...$this->getAdditionalData()
-			]
+			'error' => $t
 		];
 
 	}
 
-	protected function getAdditionalData(): array{
+	protected function getAdditionalData(): array {
 		return [];
 	}
 

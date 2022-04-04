@@ -3,7 +3,7 @@
     "host": "127.0.0.1",
     "user": "root",
     "password": "root",
-    "database": "link_shortener",
+    "database": "phonebook",
     "port": 8889
   }
 }

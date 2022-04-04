@@ -15,7 +15,7 @@ abstract class Router {
 
 	protected ControllerFactory $controllerFactory;
 
-	public function __construct(ControllerFactory $controllerFactory){
+	public function __construct(ControllerFactory $controllerFactory) {
 		$this->controllerFactory = $controllerFactory;
 	}
 
@@ -23,12 +23,12 @@ abstract class Router {
 	 * @throws RouterException
 	 * @throws ControllerException
 	 */
-	public function getCallableMethod(string $path): callable{
+	public function getCallableMethod(string $path): callable {
 		[$controllerName, $methodName] = $this->getControllerAndMethodNameFromPath($path);
 		$controller = $this->controllerFactory->getController($controllerName);
 
 		$callable = [$controller, $methodName];
-		if(!is_callable($callable)){
+		if (!is_callable($callable)) {
 			throw new RouterException("No method $controllerName.$methodName", HTTPCodes::NOT_FOUND, ErrorCodes::CONTROLLER_NOT_FOUND);
 		}
 

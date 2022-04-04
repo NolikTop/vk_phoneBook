@@ -14,7 +14,7 @@ abstract class Controller {
 
 	abstract public function getName(): string;
 
-	protected final function response(array $data, int $httpCode = HTTPCodes::OK): IResponse{
+	protected final function response(array $data, int $httpCode = HTTPCodes::OK): IResponse {
 		return new SuccessResponse($data, $httpCode);
 	}
 

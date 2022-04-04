@@ -7,7 +7,6 @@ namespace noliktop\phoneBook\response;
 
 
 use noliktop\phoneBook\exception\ValidationException;
-use Throwable;
 
 class ValidationErrorResponse extends AppErrorResponse {
 

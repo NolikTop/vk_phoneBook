@@ -2,7 +2,6 @@
 
 namespace noliktop\phoneBook\model;
 
-use mysqli;
 use mysqli_stmt;
 use noliktop\phoneBook\db\Db;
 

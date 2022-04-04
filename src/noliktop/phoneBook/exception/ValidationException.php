@@ -24,7 +24,7 @@ class ValidationException extends AppException {
 		return $this->parameter;
 	}
 
-	public function toResponse(): IResponse{
+	public function toResponse(): IResponse {
 		return new ValidationErrorResponse($this);
 	}
 

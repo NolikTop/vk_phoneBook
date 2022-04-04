@@ -8,7 +8,7 @@ namespace noliktop\phoneBook\request;
 
 use noliktop\phoneBook\exception\AppException;
 use noliktop\phoneBook\exception\HTTPCodes;
-use noliktop\phoneBook\response\ErrorResponse;
+use noliktop\phoneBook\response\InternalErrorResponse;
 use noliktop\phoneBook\response\IResponse;
 use noliktop\phoneBook\router\Router;
 use Throwable;
@@ -17,7 +17,7 @@ class RequestHandler {
 
 	protected Router $router;
 
-	public function __construct(Router $router){
+	public function __construct(Router $router) {
 		$this->router = $router;
 	}
 
@@ -32,7 +32,7 @@ class RequestHandler {
 		} catch (AppException $e) {
 			$response = $e->toResponse();
 		} catch (Throwable $e) {
-			$response = new ErrorResponse($e);
+			$response = new InternalErrorResponse($e);
 		}
 
 		return $response;

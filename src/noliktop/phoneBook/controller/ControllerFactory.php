@@ -14,21 +14,21 @@ abstract class ControllerFactory {
 	/** @var array<string, Controller> */
 	protected array $controllers = [];
 
-	public function __construct(){
+	public function __construct() {
 		$this->registerAllControllers();
 	}
 
 	abstract public function registerAllControllers(): void;
 
-	protected function register(Controller $controller){
+	protected function register(Controller $controller) {
 		$this->controllers[$controller->getName()] = $controller;
 	}
 
 	/**
 	 * @throws ControllerException
 	 */
-	public function getController(string $controllerName): Controller{
-		if(!isset($this->controllers[$controllerName])){
+	public function getController(string $controllerName): Controller {
+		if (!isset($this->controllers[$controllerName])) {
 			throw new ControllerException("No controller with name $controllerName", HTTPCodes::NOT_FOUND, ErrorCodes::CONTROLLER_NOT_FOUND);
 		}
 

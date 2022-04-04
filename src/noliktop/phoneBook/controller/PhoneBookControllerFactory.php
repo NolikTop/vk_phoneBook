@@ -8,7 +8,7 @@ namespace noliktop\phoneBook\controller;
 
 class PhoneBookControllerFactory extends ControllerFactory {
 
-	public function registerAllControllers(): void{
+	public function registerAllControllers(): void {
 		$this->register(new PhoneController());
 	}
 

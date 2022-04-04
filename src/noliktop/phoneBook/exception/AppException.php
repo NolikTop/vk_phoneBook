@@ -20,11 +20,11 @@ class AppException extends Exception {
 		parent::__construct($message, $code, $previous);
 	}
 
-	public function getHttpCode(): int{
+	public function getHttpCode(): int {
 		return $this->httpCode;
 	}
 
-	public function toResponse(): IResponse{
+	public function toResponse(): IResponse {
 		return new AppErrorResponse($this);
 	}
 

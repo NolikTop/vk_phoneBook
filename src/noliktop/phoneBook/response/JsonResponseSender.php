@@ -14,7 +14,7 @@ class JsonResponseSender implements IResponseSender {
 		$json = new JsonView($response->getData());
 
 		echo $json->render();
-		foreach ($json->getHeaders() as $header){
+		foreach ($json->getHeaders() as $header) {
 			header($header);
 		}
 

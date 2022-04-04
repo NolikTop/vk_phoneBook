@@ -23,7 +23,9 @@ class SuccessResponse implements IResponse {
 	}
 
 	public function getData(): array {
-		return $this->data;
+		return [
+			"response" => $this->data
+		];
 	}
 
 }
