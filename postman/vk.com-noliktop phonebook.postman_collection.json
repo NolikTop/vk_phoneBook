@@ -1,0 +1,230 @@
+{
+	"info": {
+		"_postman_id": "59678c60-98e6-43a4-999e-07e47bb8a8bd",
+		"name": "vk.com/noliktop phonebook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getCountry",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "sometoken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "+79008001234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{server}}/phone.getCountry",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"phone.getCountry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "sometoken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "+7900800",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{server}}/phone.search",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"phone.search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getReviews",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "sometoken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "+79008001234",
+							"type": "text"
+						},
+						{
+							"key": "count",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "offset",
+							"value": "0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{server}}/phone.getReviews",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"phone.getReviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addReview",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "sometoken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "+79008001234",
+							"type": "text"
+						},
+						{
+							"key": "review",
+							"value": "spam",
+							"type": "text"
+						},
+						{
+							"key": "access_token",
+							"value": "abcdef",
+							"description": "Можно его убрать и тогда отзыв будет анонимный",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{server}}/phone.addReview",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"phone.addReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rateReview",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "sometoken",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone",
+							"value": "+7900800",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{server}}/phone.search",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"phone.search"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c1f2523f-cb86-4df0-bf0e-d5336243898c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "67e17807-0aae-4ec9-9728-198727d57aaf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "dc0d651c-8d5b-4204-b49d-33005d2d8075",
+			"key": "server",
+			"value": "127.0.0.1:8888/vk_phoneBook"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
